@@ -1,0 +1,26 @@
+{
+  "name": "sovereign-arena",
+  "version": "1.0.0",
+  "description": "Sovereign Arena: High-Velocity Interactive Systems & AI Learning Cockpit",
+  "type": "module",
+  "main": "server/server.js",
+  "scripts": {
+    "server": "node server/server.js",
+    "client": "cd client && npm run dev",
+    "dev": "node server/server.js & (cd client && npm run dev)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikhil49023/sovereign-arena.git"
+  },
+  "keywords": ["systems", "deep-learning", "pytorch", "cuda", "rust", "cpp", "lms", "antigravity"],
+  "author": "Core Engineering Team",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "node-pty": "^1.1.0",
+    "ws": "^8.22.0"
+  }
+}
