@@ -9,16 +9,20 @@ export default {
     extend: {
       colors: {
         arena: {
-          bg: '#0a0d14',
-          panel: '#111520',
-          border: '#1e2638',
+          bg: '#090a0f',
+          surface: '#0f1118',
+          subtle: '#141824',
+          border: 'rgba(255, 255, 255, 0.08)',
+          'border-active': 'rgba(255, 255, 255, 0.16)',
           accent: '#3b82f6',
-          success: '#10b981',
-          warning: '#f59e0b',
-          danger: '#ef4444',
-          text: '#e2e8f0',
-          muted: '#94a3b8'
+          text: '#f1f5f9',
+          muted: '#94a3b8',
+          dim: '#64748b'
         }
+      },
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'Menlo', 'Monaco', 'Courier New', 'monospace']
       }
     },
   },

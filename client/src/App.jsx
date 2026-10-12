@@ -4,7 +4,7 @@ import LessonPane from './components/LessonPane';
 import EditorPane from './components/EditorPane';
 import TerminalTab from './components/TerminalTab';
 import ObsidianDrawer from './components/ObsidianDrawer';
-import { Terminal, Bot, Activity, Plus } from 'lucide-react';
+import { Terminal, Bot, Activity } from 'lucide-react';
 
 export default function App() {
   const [tracks, setTracks] = useState([]);
@@ -17,15 +17,15 @@ export default function App() {
   const [profile, setProfile] = useState(null);
   const [isVaultOpen, setIsVaultOpen] = useState(false);
 
-  // Terminal Tabs state
-  const [terminalTabs, setTerminalTabs] = useState([
+  // Terminal Tabs configuration
+  const [terminalTabs] = useState([
     { id: 'bash', title: 'Learner Shell', mode: 'bash', icon: Terminal },
-    { id: 'agy', title: 'Antigravity CLI', mode: 'antigravity', icon: Bot },
-    { id: 'monitor', title: 'System / GPU', mode: 'bash', icon: Activity }
+    { id: 'agy', title: 'Antigravity AI', mode: 'antigravity', icon: Bot },
+    { id: 'monitor', title: 'Hardware Telemetry', mode: 'bash', icon: Activity }
   ]);
   const [activeTabId, setActiveTabId] = useState('bash');
 
-  // Load Tracks and Profile on mount
+  // Fetch initial tracks and profile
   useEffect(() => {
     fetch('http://localhost:3001/api/tracks')
       .then(res => res.json())
@@ -93,12 +93,12 @@ export default function App() {
         setIsVerifying(false);
         setTestResult(data);
         if (data.success) {
-          fetchProfile(); // Refresh XP and streak immediately
+          fetchProfile();
         }
       })
       .catch(err => {
         setIsVerifying(false);
-        setTestResult({ success: false, output: 'API Error: ' + err.message });
+        setTestResult({ success: false, output: 'API Network Error: ' + err.message });
       });
   };
 
@@ -122,7 +122,7 @@ export default function App() {
       .catch(err => console.error('Error exporting to Obsidian:', err));
   };
 
-  // Keyboard shortcut Ctrl+Enter to verify
+  // Keyboard shortcut Ctrl+Enter to trigger test execution
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
@@ -135,8 +135,8 @@ export default function App() {
   }, [currentTrack, currentLesson, code, isVerifying]);
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-[#0a0d14] text-slate-100 overflow-hidden font-sans">
-      {/* Top Header */}
+    <div className="w-screen h-screen flex flex-col bg-[#090a0f] text-slate-100 overflow-hidden font-sans">
+      {/* Precision Header */}
       <Header
         tracks={tracks}
         currentTrack={currentTrack}
@@ -145,10 +145,10 @@ export default function App() {
         onOpenVault={() => setIsVaultOpen(true)}
       />
 
-      {/* Main 3-Column / Split Layout */}
+      {/* Main Cockpit Split Layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Column 1: Lesson Instructions & Verification (30% width) */}
-        <div className="w-[380px] shrink-0 h-full">
+        {/* Left: Syllabus & Verification Panel (360px) */}
+        <div className="w-[360px] shrink-0 h-full border-r border-white/[0.08]">
           <LessonPane
             lesson={currentLesson}
             onVerify={handleVerify}
@@ -159,9 +159,9 @@ export default function App() {
           />
         </div>
 
-        {/* Column 2 & 3: Editor on Top, Multi-tab Terminal on Bottom */}
+        {/* Right: Monaco Top + Terminal Bottom */}
         <div className="flex-1 flex flex-col h-full overflow-hidden">
-          {/* Top Half: Monaco Editor */}
+          {/* Top Half: Code Editor */}
           <div className="h-[52%] w-full">
             <EditorPane
               code={code}
@@ -170,36 +170,38 @@ export default function App() {
             />
           </div>
 
-          {/* Bottom Half: Multi-Tab Native Terminal */}
-          <div className="flex-1 flex flex-col bg-[#0d1117] border-t border-[#1e2638] overflow-hidden">
+          {/* Bottom Half: Native Terminal */}
+          <div className="flex-1 flex flex-col bg-[#090a0f] border-t border-white/[0.08] overflow-hidden">
             {/* Terminal Tab Bar */}
-            <div className="h-8 bg-[#111520] border-b border-[#1e2638] flex items-center justify-between px-3 shrink-0">
+            <div className="h-8 bg-[#0c0e14]/70 border-b border-white/[0.08] flex items-center justify-between px-3 shrink-0">
               <div className="flex items-center space-x-1">
                 {terminalTabs.map(tab => {
                   const Icon = tab.icon;
+                  const isActive = activeTabId === tab.id;
                   return (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTabId(tab.id)}
-                      className={`flex items-center space-x-1.5 px-3 py-1 rounded text-xs transition ${
-                        activeTabId === tab.id
-                          ? 'bg-[#1e2638] text-slate-100 font-semibold border-b-2 border-blue-500'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-[#151b28]'
+                      className={`flex items-center space-x-1.5 px-2.5 py-1 rounded text-xs font-mono transition ${
+                        isActive
+                          ? 'bg-white/[0.08] text-slate-100 font-medium border border-white/[0.1]'
+                          : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
                       }`}
                     >
-                      <Icon size={12} className={activeTabId === tab.id ? 'text-blue-400' : 'text-slate-500'} />
-                      <span>{tab.title}</span>
+                      <Icon size={12} className={isActive ? 'text-blue-400' : 'text-slate-500'} />
+                      <span className="text-[11px]">{tab.title}</span>
                     </button>
                   );
                 })}
               </div>
-              <div className="text-[11px] text-slate-500 font-mono">
-                Shell: Native Linux PTY | GPU: RTX 3050 Active
+              <div className="text-[10px] text-slate-500 font-mono tracking-wider uppercase flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Linux PTY · RTX 3050 Online</span>
               </div>
             </div>
 
-            {/* Terminal Tab Containers */}
-            <div className="flex-1 relative w-full h-full">
+            {/* Terminal Viewport */}
+            <div className="flex-1 relative w-full h-full bg-[#090a0f]">
               {terminalTabs.map(tab => (
                 <TerminalTab
                   key={tab.id}

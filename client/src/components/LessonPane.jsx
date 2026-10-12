@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, CheckCircle2, AlertTriangle, BookOpen, ExternalLink, Sparkles, GitCommit } from 'lucide-react';
+import { Play, Check, AlertCircle, BookOpen, ExternalLink, GitCommit, Sparkles, Layers } from 'lucide-react';
 
 export default function LessonPane({ 
   lesson, 
@@ -11,71 +11,80 @@ export default function LessonPane({
 }) {
   if (!lesson) {
     return (
-      <div className="w-full h-full flex items-center justify-center text-slate-500 p-6 text-sm">
-        Select a track and drill to begin.
+      <div className="w-full h-full flex items-center justify-center text-slate-500 p-6 text-xs font-mono">
+        Select a track to initialize syllabus.
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0a0d14] border-r border-[#1e2638] overflow-y-auto">
+    <div className="w-full h-full flex flex-col bg-[#090a0f] border-r border-white/[0.08] overflow-hidden">
       {/* Lesson Header */}
-      <div className="p-5 border-b border-[#1e2638] bg-[#0d111a]">
+      <div className="p-4 border-b border-white/[0.08] bg-[#0c0e14]/60">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-mono tracking-wider uppercase text-blue-400 font-semibold">
-            {lesson.trackTitle}
-          </span>
           <div className="flex items-center space-x-2">
-            <span className={`px-2 py-0.5 rounded text-[11px] font-medium ${
-              lesson.difficulty === 'Easy' ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40' :
-              lesson.difficulty === 'Medium' ? 'bg-amber-950/60 text-amber-400 border border-amber-800/40' :
-              'bg-rose-950/60 text-rose-400 border border-rose-800/40'
+            <Layers size={11} className="text-blue-400" />
+            <span className="text-[10px] font-mono tracking-wider uppercase text-slate-400 font-semibold">
+              {lesson.trackTitle}
+            </span>
+          </div>
+          <div className="flex items-center space-x-1.5">
+            <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium ${
+              lesson.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+              lesson.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+              'bg-rose-500/10 text-rose-400 border border-rose-500/20'
             }`}>
               {lesson.difficulty}
             </span>
-            <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-blue-950/60 text-blue-300 border border-blue-800/40 flex items-center gap-1">
-              <Sparkles size={11} /> +{lesson.xp} XP
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-blue-500/10 text-blue-300 border border-blue-500/20 flex items-center gap-1">
+              <Sparkles size={10} /> +{lesson.xp} XP
             </span>
           </div>
         </div>
-        <h2 className="text-lg font-bold text-slate-100">{lesson.title}</h2>
+        <h2 className="text-sm font-semibold text-slate-100 tracking-tight">{lesson.title}</h2>
       </div>
 
-      {/* Instructions / Mental Model */}
-      <div className="flex-1 p-5 space-y-4 text-sm text-slate-300 leading-relaxed overflow-y-auto font-sans">
-        <div className="prose prose-invert max-w-none text-slate-300 text-sm">
+      {/* Instructions & Mental Model */}
+      <div className="flex-1 p-4 space-y-4 text-xs text-slate-300 leading-relaxed overflow-y-auto font-sans">
+        <div className="space-y-3">
           {lesson.instructions.split('\n\n').map((paragraph, i) => {
             if (paragraph.startsWith('###')) {
               return (
-                <h3 key={i} className="text-base font-semibold text-slate-100 mt-4 mb-2 flex items-center gap-2">
-                  <span className="w-1.5 h-4 bg-blue-500 rounded"></span>
-                  {paragraph.replace('###', '').trim()}
-                </h3>
+                <div key={i} className="pt-2 pb-1 border-b border-white/[0.06]">
+                  <h3 className="text-xs font-semibold text-slate-100 uppercase tracking-wider font-mono flex items-center gap-2">
+                    <span className="w-1 h-3 bg-blue-500 rounded-sm"></span>
+                    {paragraph.replace('###', '').trim()}
+                  </h3>
+                </div>
               );
             }
-            return <p key={i} className="mb-3 text-slate-300">{paragraph}</p>;
+            return <p key={i} className="text-slate-300 leading-normal">{paragraph}</p>;
           })}
         </div>
 
         {/* Test Result Feedback */}
         {testResult && (
-          <div className={`mt-4 p-4 rounded-lg border text-xs font-mono transition-all duration-200 ${
+          <div className={`mt-4 p-3.5 rounded-md border text-xs font-mono transition-all duration-150 ${
             testResult.success 
-              ? 'bg-emerald-950/40 border-emerald-700/50 text-emerald-300' 
-              : 'bg-rose-950/40 border-rose-700/50 text-rose-300'
+              ? 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300' 
+              : 'bg-rose-950/20 border-rose-500/30 text-rose-300'
           }`}>
             <div className="flex items-center justify-between font-semibold mb-2">
-              <span className="flex items-center gap-2">
-                {testResult.success ? <CheckCircle2 size={16} className="text-emerald-400" /> : <AlertTriangle size={16} className="text-rose-400" />}
-                {testResult.success ? 'VERIFICATION PASSED!' : 'ASSERTION / COMPILER FAILURE'}
+              <span className="flex items-center gap-1.5 text-[11px]">
+                {testResult.success ? (
+                  <Check size={14} className="text-emerald-400" />
+                ) : (
+                  <AlertCircle size={14} className="text-rose-400" />
+                )}
+                {testResult.success ? 'VERIFICATION PASSED' : 'VERIFICATION FAILED'}
               </span>
               {testResult.gitCommit && (
-                <span className="flex items-center gap-1 text-[11px] text-blue-300 bg-blue-950/80 px-2 py-0.5 rounded border border-blue-800/50">
-                  <GitCommit size={12} /> Commit {testResult.gitCommit}
+                <span className="flex items-center gap-1 text-[10px] text-slate-300 bg-white/[0.06] px-2 py-0.5 rounded border border-white/[0.1] font-mono">
+                  <GitCommit size={11} className="text-blue-400" /> {testResult.gitCommit}
                 </span>
               )}
             </div>
-            <pre className="whitespace-pre-wrap overflow-x-auto text-[11px] max-h-40 bg-black/40 p-2.5 rounded border border-white/5">
+            <pre className="whitespace-pre-wrap overflow-x-auto text-[11px] max-h-36 bg-black/40 p-2.5 rounded border border-white/[0.04] text-slate-300 leading-relaxed font-mono">
               {testResult.output}
             </pre>
           </div>
@@ -83,39 +92,43 @@ export default function LessonPane({
 
         {/* Obsidian Export Confirmation */}
         {exportResult && exportResult.success && (
-          <div className="p-3 bg-indigo-950/40 border border-indigo-700/50 rounded-lg text-xs text-indigo-300 flex items-center justify-between">
-            <span>✓ Note exported to Obsidian Vault</span>
+          <div className="p-3 bg-purple-950/20 border border-purple-500/30 rounded-md text-xs text-purple-200 flex items-center justify-between font-mono">
+            <span>Note synced to Career_Roadmap</span>
             <a 
               href={exportResult.obsidianUri} 
-              className="flex items-center gap-1 text-indigo-400 underline hover:text-indigo-200"
+              className="flex items-center gap-1 text-purple-400 hover:text-purple-300 underline text-[11px]"
             >
-              Open in Obsidian <ExternalLink size={12} />
+              Open in Obsidian <ExternalLink size={11} />
             </a>
           </div>
         )}
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 border-t border-[#1e2638] bg-[#0d111a] flex items-center justify-between space-x-3">
+      <div className="p-3 border-t border-white/[0.08] bg-[#0c0e14]/80 flex items-center space-x-2.5">
         <button
           onClick={onExportObsidian}
-          className="px-3 py-2 text-xs font-medium text-slate-300 hover:text-white bg-[#1a2130] hover:bg-[#252f44] border border-[#2a364f] rounded-md transition flex items-center gap-1.5"
+          className="px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] rounded-md transition flex items-center gap-1.5 active:scale-[0.98]"
           title="Save verified note into Career_Roadmap vault"
         >
-          <BookOpen size={14} /> Export to Obsidian
+          <BookOpen size={13} className="text-slate-400" />
+          <span>Sync Note</span>
         </button>
 
         <button
           onClick={onVerify}
           disabled={isVerifying}
-          className={`flex-1 py-2 px-4 rounded-md text-xs font-semibold flex items-center justify-center gap-2 transition ${
+          className={`flex-1 py-1.5 px-3 rounded-md text-xs font-medium flex items-center justify-center gap-2 transition active:scale-[0.98] ${
             isVerifying 
               ? 'bg-blue-600/50 text-white cursor-wait' 
-              : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20 active:scale-95'
+              : 'bg-blue-600 hover:bg-blue-500 text-white shadow-sm'
           }`}
         >
-          <Play size={14} className={isVerifying ? 'animate-spin' : ''} />
-          {isVerifying ? 'Running Tests...' : 'Verify & Auto-Commit 🚀'}
+          <Play size={12} className={isVerifying ? 'animate-spin' : 'fill-current'} />
+          <span>{isVerifying ? 'Running Test Suite...' : 'Run Verification'}</span>
+          <kbd className="text-[10px] bg-black/30 text-blue-200 px-1 py-0.2 rounded font-mono ml-1 border border-white/10">
+            Ctrl ↵
+          </kbd>
         </button>
       </div>
     </div>

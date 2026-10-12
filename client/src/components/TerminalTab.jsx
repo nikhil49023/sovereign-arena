@@ -19,8 +19,8 @@ export default function TerminalTab({ mode = 'bash', active = true }) {
       fontSize: 13,
       lineHeight: 1.2,
       theme: {
-        background: '#0d1117',
-        foreground: '#c9d1d9',
+        background: '#090a0f',
+        foreground: '#e2e8f0',
         cursor: '#58a6ff',
         selectionBackground: '#264f78',
         black: '#000000',
@@ -107,7 +107,7 @@ export default function TerminalTab({ mode = 'bash', active = true }) {
 
   return (
     <div 
-      className={`w-full h-full p-2 bg-[#0d1117] overflow-hidden ${active ? 'block' : 'hidden'}`}
+      className={`w-full h-full p-2 bg-[#090a0f] overflow-hidden ${active ? 'block' : 'hidden'}`}
       ref={terminalRef} 
     />
   );
